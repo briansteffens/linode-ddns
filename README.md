@@ -4,6 +4,11 @@ linode-ddns
 Dynamic DNS update script for Linode.
 
 
+Requirements
+============
+Requires the wanip client (https://github.com/Tiltar/wanip).
+
+
 Installation
 ============
 To download and install:
