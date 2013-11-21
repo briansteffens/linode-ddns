@@ -1,0 +1,36 @@
+#!/bin/sh
+
+CONFIG_PATH=/etc/linode-ddns
+LAST_IP_FILE=/var/linode-ddns
+
+LAST_IP=`cat "$LAST_IP_FILE"`
+NEW_IP=`wanip`
+
+if [ "$LAST_IP" = "$NEW_IP" ]; then
+	echo 'IP unchanged since last check. Exiting without updating.'
+	exit 0
+fi
+
+echo 'IP changed from ['"$LAST_IP"'] to ['"$NEW_IP"'] since last check.'
+
+for CONFIG_FILE in `ls "$CONFIG_PATH"`
+do
+	echo 'Updating ['"$CONFIG_FILE"']..'
+
+	CONFIG_FILE="$CONFIG_PATH"/"$CONFIG_FILE"
+
+	API_KEY=`cat $CONFIG_FILE | grep API_KEY= | sed s/API_KEY=//`
+	DOMAIN_ID=`cat $CONFIG_FILE | grep DOMAIN_ID= | sed s/DOMAIN_ID=//`
+	RESOURCE_ID=`cat $CONFIG_FILE | grep RESOURCE_ID= | sed s/RESOURCE_ID=//`
+	
+    CALL=https://api.linode.com/?
+	CALL="$CALL"api_key="$API_KEY"\&
+	CALL="$CALL"api_action=domain.resource.update\&
+	CALL="$CALL"DomainID="$DOMAIN_ID"\&
+	CALL="$CALL"ResourceID="$RESOURCE_ID"\&
+	CALL="$CALL"Target=[remote_addr]
+    
+    wget -qO- "$CALL" > /dev/null
+done
+
+`echo "$NEW_IP" > "$LAST_IP_FILE"`
