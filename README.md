@@ -17,6 +17,8 @@ To configure, customize /etc/linode-ddns/example.com.conf. You'll need a Linode 
 for the domain and DNS record to update. Multiple domains/records can be updated at once if there
 are multiple files following the example.com.conf template in /etc/linode-ddns.
 
+Make sure whichever user linode-ddns will be run as can read the *.conf files in /etc/linode-ddns
+and read+write /var/linode-ddns.
 
 Usage
 =====
