@@ -21,5 +21,3 @@ uninstall:
 	@echo
 	@echo "Config files left in /etc/linode-ddns"
 	@echo
-	
-
